@@ -20,7 +20,7 @@ def get_initial_stock_list(no_of_tickers = no_of_tickers):
     # Step 3: Get market cap using yfinance
     market_caps = []
 
-    print("Fetching market cap for 500 tickers...")
+    print(f"Fetching market cap for {no_of_tickers} tickers...")
     for _, row in tqdm(sample.iterrows(), total=no_of_tickers):
         symbol = row['Symbol']
         try:
