@@ -32,8 +32,10 @@ def get_initial_stock_list(no_of_tickers = no_of_tickers):
             market_caps.append(None)
 
     # Add market cap to the dataframe
-    sample['MarketCap'] = market_caps.fillna(0)   
-
+    sample['MarketCap'] = market_caps
+    sample['MarketCap'].fillna(0, inplace=True)
+    sample['MarketCap'] = sample['MarketCap'].astype(int)
+    
     # Step 4: Display or save
     print(sample.head())
 
