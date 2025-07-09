@@ -1,0 +1,20 @@
+# app.py
+from flask import Flask, jsonify, request
+import pandas as pd  # Example: external lib
+import initial_stock_list
+
+app = Flask(__name__)
+
+@app.route('/get_stocks', methods=['POST'])
+def process():
+    try:
+        # req_data = request.get_json()
+        # stock_count = req_data.get('stock_count',15)
+        data = initial_stock_list.get_initial_stock_list()
+        summary = data.to_dict()
+        return jsonify(summary)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

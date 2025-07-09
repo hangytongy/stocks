@@ -3,4 +3,4 @@ ta
 numpy
 yfinance
 tqdm
-
+flask
