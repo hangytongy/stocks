@@ -4,7 +4,6 @@ import numpy as np
 import yfinance as yf # Import yfinance
 import time
 import datetime
-import initial_stock_list
 
 
 def get_stock_data_yfinance(tickers, period, interval):
@@ -147,10 +146,12 @@ def get_confirmed_list(results, total_tickers_considered, top_percentile):
     return df_top
 
 # === Main Execution ===
-if __name__ == "__main__":
+def run_momentum_stocks(initial_stock_list):
     # CONFIG (can be moved into main if you want to avoid global vars)
     #TICKERS = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'META', 'GOOGL', 'NFLX', 'SHOP', 'AMD']
-    sample = initial_stock_list.get_initial_stock_list()
+    print(f"incoming initial stock list : {initial_stock_list}")
+    sample = pd.DataFrame(initial_stock_list)
+    sample.rename(columns={"Stock Ticker($)": "Symbol"}, inplace=True)
     TICKERS = sample['Symbol'].tolist()
     PERIOD = '60d' # yfinance period, e.g., '60d', '1y', 'max'
     INTERVAL = '1d' # yfinance interval, e.g., '1d', '1wk', '1mo'
@@ -170,4 +171,8 @@ if __name__ == "__main__":
     print("---------------------------------------------------")
     print(top_picks)
 
+    return momentum_list
+
     print("\n--- Script Finished ---")
+
+

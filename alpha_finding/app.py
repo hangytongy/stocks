@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, request
 import pandas as pd  # Example: external lib
 import initial_stock_list
+import momentum_stocks
 
 app = Flask(__name__)
 
@@ -12,6 +13,17 @@ def process():
         # stock_count = req_data.get('stock_count',15)
         data = initial_stock_list.get_initial_stock_list()
         summary = data.to_dict()
+        return jsonify(summary)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/get_momentum_stocks', methods=['POST'])
+def get_momentum_stocks():
+    try:
+        req_data = request.get_json()
+        initial_stock_list = req_data[0]['message']['content']['stocks']
+        momentum_list = momentum_stocks.run_momentum_stocks(initial_stock_list)
+        summary = momentum_list.to_dict()
         return jsonify(summary)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
