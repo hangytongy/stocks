@@ -21,7 +21,7 @@ def process():
 def get_momentum_stocks():
     try:
         req_data = request.get_json()
-        initial_stock_list = req_data[0]['message']['stocks']
+        initial_stock_list = req_data[0]['content']['stocks']
         momentum_list = momentum_stocks.run_momentum_stocks(initial_stock_list)
         summary = pd.DataFrame(momentum_list)
         summary = summary.to_dict(orient='records')
