@@ -23,7 +23,8 @@ def get_momentum_stocks():
         req_data = request.get_json()
         initial_stock_list = req_data[0]['message']['content']['stocks']
         momentum_list = momentum_stocks.run_momentum_stocks(initial_stock_list)
-        summary = momentum_list.to_dict()
+        summary = pd.DataFrame(momentum_list)
+        summary = summary.to_dict(orient='records')
         return jsonify(summary)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
