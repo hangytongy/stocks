@@ -151,7 +151,7 @@ def run_momentum_stocks(initial_stock_list):
     #TICKERS = ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'META', 'GOOGL', 'NFLX', 'SHOP', 'AMD']
     print(f"incoming initial stock list : {initial_stock_list}")
     sample = pd.DataFrame(initial_stock_list)
-    sample.rename(columns={"Stock Ticker($)": "Symbol"}, inplace=True)
+    sample.rename(columns={"Stock Ticker": "Symbol"}, inplace=True)
     TICKERS = sample['Symbol'].tolist()
     PERIOD = '60d' # yfinance period, e.g., '60d', '1y', 'max'
     INTERVAL = '1d' # yfinance interval, e.g., '1d', '1wk', '1mo'
