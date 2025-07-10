@@ -9,9 +9,9 @@ app = Flask(__name__)
 @app.route('/get_stocks', methods=['POST'])
 def process():
     try:
-        # req_data = request.get_json()
-        # stock_count = req_data.get('stock_count',15)
-        data = initial_stock_list.get_initial_stock_list()
+        req_data = request.get_json()
+        stock_count = req_data.get('stock_count',15)
+        data = initial_stock_list.get_initial_stock_list(stock_count)
         summary = data.to_dict()
         return jsonify(summary)
     except Exception as e:

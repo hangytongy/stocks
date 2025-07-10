@@ -2,9 +2,7 @@ import pandas as pd
 import yfinance as yf
 from tqdm import tqdm
 
-no_of_tickers = 15
-
-def get_initial_stock_list(no_of_tickers = no_of_tickers):
+def get_initial_stock_list(no_of_tickers : int):
 
     # Step 1: Load NASDAQ-listed companies
     url = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt"
@@ -35,7 +33,7 @@ def get_initial_stock_list(no_of_tickers = no_of_tickers):
     sample['MarketCap'] = market_caps
     sample['MarketCap'].fillna(0, inplace=True)
     sample['MarketCap'] = sample['MarketCap'].astype(int)
-    
+
     # Step 4: Display or save
     print(sample.head())
 
