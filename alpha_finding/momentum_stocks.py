@@ -89,45 +89,56 @@ def process_stocks(all_stock_data):
             processed_tickers_count += 1
             print(f"Processing {ticker} ({processed_tickers_count}/{len(all_stock_data)})...")
 
-            # Ensure 'Close' column is numeric
+            # Ensure 'Close' and 'Volume' columns are numeric
             df['Close'] = pd.to_numeric(df['Close'])
+            df['Volume'] = pd.to_numeric(df['Volume'])
 
-            # Indicators
+            # === INDICATORS ===
+            df['EMA_5'] = df['Close'].ewm(span=5, adjust=False).mean()
             df['EMA_10'] = df['Close'].ewm(span=10, adjust=False).mean()
-            df['ROC_5'] = df['Close'].pct_change(5)
+            df['EMA_20'] = df['Close'].ewm(span=20, adjust=False).mean()
+            df['EMA_50'] = df['Close'].ewm(span=50, adjust=False).mean()
             df['RSI_3'] = ta.momentum.RSIIndicator(df['Close'], window=3).rsi()
+            df['ROC_5'] = df['Close'].pct_change(5)
+            df['Volume_SMA_50'] = df['Volume'].rolling(window=50).mean()
 
-            # Check for NaN values introduced by indicator calculations
-            # For RSI and ROC, early values will be NaN. Ensure enough valid data.
-            # We need at least two rows for latest and prev, after NaNs from indicators.
-            df_cleaned = df.dropna(subset=['EMA_10', 'ROC_5', 'RSI_3'])
+            # Drop rows with any NaNs due to indicator calculations
+            df_cleaned = df.dropna(subset=[
+                'EMA_5', 'EMA_10', 'EMA_20', 'EMA_50',
+                'RSI_3', 'ROC_5', 'Volume_SMA_50'
+            ])
             if len(df_cleaned) < 2:
                 print(f"Not enough complete data points after indicator calculation for {ticker}. Skipping.")
                 continue
 
-            # Current snapshot - ensure we get the latest non-NaN values from the cleaned DataFrame
+            # Use the latest data point
             latest = df_cleaned.iloc[-1]
             prev = df_cleaned.iloc[-2]
 
-            # Screener Conditions
+            # === SCREENING CONDITIONS ===
             if (
                 latest['RSI_3'] > 70
                 and latest['Close'] > latest['EMA_10']
-                and latest['EMA_10'] > prev['EMA_10']  # EMA trending up
+                and latest['EMA_5'] > latest['EMA_10'] > latest['EMA_20']
+                and latest['Close'] > latest['EMA_50']
+                and latest['Volume'] > 1.2 * latest['Volume_SMA_50']
             ):
                 results.append({
                     'Ticker': ticker,
                     '5D ROC (%)': round(latest['ROC_5'] * 100, 2),
                     'RSI(3)': round(latest['RSI_3'], 1),
-                    'Price vs EMA10': round(latest['Close'] / latest['EMA_10'], 3)
+                    'Price vs EMA10': round(latest['Close'] / latest['EMA_10'], 3),
+                    'EMA Stack': f"{round(latest['EMA_5'],2)} > {round(latest['EMA_10'],2)} > {round(latest['EMA_20'],2)}",
+                    'Vol Ratio': round(latest['Volume'] / latest['Volume_SMA_50'], 2)
                 })
 
         except Exception as e:
             print(f"Error processing data for {ticker}: {e}")
-            # Consider adding ticker to a failed_processing list if desired
+            continue
 
     print("\n--- Screening Complete ---")
     return results
+
 
 def get_confirmed_list(results, total_tickers_considered, top_percentile):
     """
