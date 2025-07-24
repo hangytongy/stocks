@@ -5,6 +5,9 @@ import pytz
 import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # === CONFIGURATION ===
 FINNHUB_API_KEY = os.getenv('FINNHUB_API_KEY')
@@ -13,7 +16,7 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 GOOGLE_SHEET_NAME = "Stock_Watchlist"  # Name of your Google Sheet
 GOOGLE_CREDENTIALS_FILE = "your-service-account.json"  # Path to your downloaded JSON key
 CHECK_INTERVAL = 60  # seconds
-TIMEZONE = pytz.timezone("US/Eastern")  # Change if needed
+TIMEZONE = pytz.timezone("Asia/Singapore")  # Change if needed
 
 # === CACHED TIMESTAMPS TO AVOID DUPLICATES ===
 latest_timestamps = {}
@@ -47,7 +50,7 @@ def send_telegram_message(text):
 # === Format news article ===
 def format_article(article, symbol):
     dt = datetime.fromtimestamp(article['datetime'], tz=TIMEZONE).strftime('%Y-%m-%d %H:%M')
-    return f"*{symbol}* - *{article['headline']}*\n{dt}\n[Read more]({article['url']})"
+    return f"*${symbol}* \n\n*{article['headline']}*\n{dt}\n[Read more]({article['url']})"
 
 # === Main monitoring loop ===
 def main():
@@ -56,12 +59,15 @@ def main():
     while True:
         try:
             symbols = get_symbols_from_google_sheet()
+            print(symbols)
             for symbol in symbols:
+                print(symbol)
                 if symbol not in latest_timestamps:
                     latest_timestamps[symbol] = 0
 
                 news_items = get_latest_news(symbol)
                 if news_items:
+                    print(news_items)
                     latest_article = max(news_items, key=lambda x: x['datetime'])
                     article_time = latest_article.get("datetime", 0)
                     if article_time > latest_timestamps[symbol]:
