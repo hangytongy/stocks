@@ -15,7 +15,7 @@ TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 GOOGLE_SHEET_NAME = "Stock_Watchlist"
 GOOGLE_CREDENTIALS_FILE = "your-service-account.json"
-CHECK_INTERVAL = 60  # seconds
+CHECK_INTERVAL = 120  # seconds
 TIMEZONE = pytz.timezone("Asia/Singapore")
 
 # === CACHED TIMESTAMPS TO AVOID DUPLICATES ===
@@ -23,12 +23,20 @@ latest_timestamps = {}
 
 # === Load stock symbols from Google Sheet ===
 def get_symbols_from_google_sheet():
-    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_CREDENTIALS_FILE, scope)
-    client = gspread.authorize(creds)
-    sheet = client.open(GOOGLE_SHEET_NAME).sheet1
-    symbols = sheet.col_values(1)[1:]
-    return [s.strip().upper() for s in symbols if s.strip()]
+    """
+    Authenticates with Google Sheets using a service account and
+    fetches stock symbols from the first column of the specified sheet.
+    """
+    try:
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_CREDENTIALS_FILE, scope)
+        client = gspread.authorize(creds)
+        sheet = client.open(GOOGLE_SHEET_NAME).sheet1
+        symbols = sheet.col_values(1)[1:] # Skip header row
+        return [s.strip().upper() for s in symbols if s.strip()]
+    except Exception as e:
+        print(f"Error loading symbols from Google Sheet: {e}")
+        return []
 
 # === Fetch market cap from Finnhub ===
 def get_market_cap(symbol):
