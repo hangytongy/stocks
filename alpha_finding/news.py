@@ -1,6 +1,6 @@
 import requests
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import os
 import gspread
@@ -48,7 +48,8 @@ def get_market_cap(symbol):
 # === Fetch latest news from Finnhub ===
 def get_latest_news_finnhub(symbol):
     today = datetime.now().strftime('%Y-%m-%d')
-    url = f'https://finnhub.io/api/v1/company-news?symbol={symbol}&from={today}&to={today}&token={FINNHUB_API_KEY}'
+    yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    url = f'https://finnhub.io/api/v1/company-news?symbol={symbol}&from={yesterday}&to={today}&token={FINNHUB_API_KEY}'
     response = requests.get(url)
     return response.json()
 
@@ -122,3 +123,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
