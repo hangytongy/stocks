@@ -15,6 +15,22 @@ app = Flask(__name__)
 # export GOOGLE_API_KEY="YOUR_API_KEY"
 api_key_value = os.environ.get("GOOGLE_API_KEY")
 client = genai.Client(api_key=api_key_value)
+prompt_ = '''Act as an expert analyst for a major financial institution. Your task is to provide two separate, world-class summaries of a YouTube interview transcript. These summaries are intended for Michael Platt, the head of Bluecrest Capital Management, and his CTO, Jeffrey.
+
+**Michael Platt's Summary**
+
+* Focus on the economic reality, not on hype.
+* Highlight verifiable macro implications of the work. Avoid speculation.
+* Include specific numbers, statistics, and their sources.
+
+**Jeffrey's Summary**
+
+* Focus on academically defensible positions and their justifications.
+* Provide key details, logic, and business builds.
+* Analyze the technological capabilities, including enhancements or degradations.
+
+Your response must be a single output containing both summaries. Start with Platt's summary first, followed by Jeffrey's summary. Do not omit any key information, and ensure the summaries are as long as necessary to fully address the needs of both individuals.
+'''
 
 # Define the API endpoint
 @app.route('/summarize', methods=['POST'])
@@ -37,7 +53,7 @@ def summarize_video():
             return jsonify({'error': 'The provided URL is not a valid YouTube link.'}), 400
 
         # Define the prompt for the Gemini model
-        prompt = "Analyze the following YouTube video content. Provide a concise summary and a list of key takeaways. Do not remove any information that could help the user understand the subject matter"
+        prompt = prompt_
 
         # Make the API call
         response = client.models.generate_content(
