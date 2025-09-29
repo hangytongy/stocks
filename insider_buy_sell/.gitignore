@@ -1,0 +1,13 @@
+# Ignore your service account key
+your-service-account.json
+
+# Ignore environment variables
+.env
+
+# Ignore Python cache and logs
+__pycache__/
+*.pyc
+*.log
+
+# Ignore virtual environments
+venv/
