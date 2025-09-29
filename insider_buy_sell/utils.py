@@ -93,3 +93,4 @@ def send_telegram_message(text):
         }
 
     requests.post(url, json=payload)
+    print("Message sent")
