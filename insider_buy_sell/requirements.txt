@@ -1,0 +1,11 @@
+pandas 
+ta
+numpy
+yfinance
+tqdm
+flask
+requests
+pytz
+gspread
+oauth2client
+python-dotenv

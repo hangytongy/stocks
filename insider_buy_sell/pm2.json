@@ -1,0 +1,19 @@
+{
+    apps: [
+      {
+        name: "insider_buy_sell",
+        script: "./insider_buy_sell.py",
+        interpreter: "./venv/bin/python",          // or "python3" depending on your system
+        cron_restart: "0 12 * * 0",     // every 7 days, at 12:00 PM on Sunday (adjust as needed)
+        watch: false
+      },
+      {
+        name: "insider_ticker",
+        script: "./insider_ticker.py",
+        interpreter: "./venv/bin/python",
+        cron_restart: "30 12 * * 0",    // every 7 days, at 12:30 PM on Sunday
+        watch: false
+      }
+    ]
+  }
+  
