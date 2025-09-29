@@ -12,8 +12,6 @@ def run_insider_ticker():
     subprocess.run(["python3", "insider_ticker.py"], check=True)
 
 
-run_insider_buy_sell()
-run_insider_ticker()
 # Schedule tasks
 schedule.every(7).days.at("12:00").do(run_insider_buy_sell)
 schedule.every(7).days.at("12:30").do(run_insider_ticker)
