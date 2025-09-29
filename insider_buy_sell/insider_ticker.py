@@ -1,7 +1,7 @@
 #Get insider selling/buying
 
 import pandas as pd
-from insider_buy_sell.utils import get_symbols_from_google_sheet, insider_analysis, send_telegram_message
+from utils import get_symbols_from_google_sheet, insider_analysis, send_telegram_message
 import time 
 
 

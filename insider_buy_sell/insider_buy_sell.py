@@ -2,7 +2,7 @@
 
 import pandas as pd
 import time
-from insider_buy_sell.utils import insider_analysis, send_telegram_message
+from utils import insider_analysis, send_telegram_message
 
 
 days = 7
