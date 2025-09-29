@@ -20,7 +20,7 @@ if __name__ == "__main__":
         df = insider_analysis(url)
         if df is not None and not df.empty:
             all_dfs.append(df)
-            send_telegram_message(f"**{ticker}insider activity the last {days} days** \n\n {df}")
+            send_telegram_message(f"**{ticker} insider activity the last {days} days** \n\n {df}")
 #        time.sleep(1)
 
 #    if all_dfs:
