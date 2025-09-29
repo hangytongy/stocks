@@ -11,6 +11,9 @@ def run_insider_ticker():
     print(f"[{datetime.now()}] Running insider_ticker.py")
     subprocess.run(["python3", "insider_ticker.py"])
 
+
+run_insider_buy_sell
+run_insider_ticker
 # Schedule tasks
 schedule.every(7).days.at("12:00").do(run_insider_buy_sell)
 schedule.every(7).days.at("12:30").do(run_insider_ticker)
