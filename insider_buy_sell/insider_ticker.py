@@ -20,8 +20,10 @@ if __name__ == "__main__":
         df = insider_analysis(url)
         if df is not None and not df.empty:
             all_dfs.append(df)
-        time.sleep(5)
+            send_telegram_message(f"**{ticker}insider activity the last {days} days** \n\n {df}")
+        time.sleep(1)
 
-    if all_dfs:
-        combined_df = pd.concat(all_dfs, ignore_index=True)
-        send_telegram_message(f"**{ticker} insider activity the last {days} days** \n\n {all_dfs}")
+#    if all_dfs:
+#        combined_df = pd.concat(all_dfs, ignore_index=True)
+#        msg = combined_df.to_markdown(index=False)
+#        send_telegram_message(f"**insider activity the last {days} days** \n\n {msg}")
