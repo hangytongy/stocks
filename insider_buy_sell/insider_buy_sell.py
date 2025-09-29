@@ -17,7 +17,7 @@ if __name__ == "__main__":
     df_sell = insider_analysis(insider_selling)
     if df_sell is not None and not df_sell.empty:
         send_telegram_message(f"***PAST {days} selling activity*** \n\n {df_sell}")
-    time.sleep(5)
+#    time.sleep(5)
     df_buy = insider_analysis(insider_buying)
     if df_buy is not None and not df_buy.empty:
         send_telegram_message(f"***PAST {days} buying activity*** \n\n {df_buy}")

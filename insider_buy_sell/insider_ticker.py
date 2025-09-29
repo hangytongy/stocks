@@ -21,7 +21,7 @@ if __name__ == "__main__":
         if df is not None and not df.empty:
             all_dfs.append(df)
             send_telegram_message(f"**{ticker}insider activity the last {days} days** \n\n {df}")
-        time.sleep(1)
+#        time.sleep(1)
 
 #    if all_dfs:
 #        combined_df = pd.concat(all_dfs, ignore_index=True)
