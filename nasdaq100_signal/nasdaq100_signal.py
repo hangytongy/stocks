@@ -19,31 +19,28 @@ load_dotenv()
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-def send_telegram_photo(photo,text):
+def send_telegram_photo(photo_path, text):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
 
-    photo = open(photo, "rb")
-
-    files = {"photo": photo}
-
-    chat_id = TELEGRAM_CHAT_ID
-
-    if "_" in chat_id:
-        ids = chat_id.split("_")
+    files = {"photo": open(photo_path, "rb")}
+    
+    payload = {}
+    if "_" in TELEGRAM_CHAT_ID:
+        ids = TELEGRAM_CHAT_ID.split("_")
         payload = {
             "chat_id": ids[0],
-            "message_thread_id" : ids[1],
-            "caption" : text
+            "message_thread_id": ids[1],
+            "caption": text
         }
-    
     else:
         payload = {
-            "chat_id": chat_id,
+            "chat_id": TELEGRAM_CHAT_ID,
             "caption": text
         }
 
-    requests.post(url, json=payload, files=files)
-    print("Photo sent")
+    response = requests.post(url, data=payload, files=files)
+    print(response.json())
+
 
 def get_nasdaq100_from_slickcharts():
     url = "https://www.slickcharts.com/nasdaq100"
