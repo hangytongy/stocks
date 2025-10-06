@@ -1,0 +1,13 @@
+{
+    "apps": [
+      {
+        "name": "nasdaq100_signal",
+        "script": "venv/bin/python3",
+        "cron_restart": "0 12 * * 0",
+        "autorestart" : false,
+        "args" : "nasdaq100_signal.py"
+      }
+
+    ]
+  }
+  
