@@ -1,0 +1,13 @@
+{
+    "apps": [
+      {
+        "name": "goog_trends",
+        "script": "venv/bin/python3",
+        "cron_restart": "0 11 * * *",
+        "autorestart" : false,
+        "args" : "trend.py"
+      }
+
+    ]
+  }
+  
