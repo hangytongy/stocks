@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from pytrends.request import TrendReq
 from dotenv import load_dotenv
+import time
+from pytrends.exceptions import TooManyRequestsError
+
 
 # === LOAD TELEGRAM CREDENTIALS ===
 load_dotenv()
@@ -32,6 +35,21 @@ def send_telegram_photo(photo_path, text):
         print(response.json())
 
 
+def safe_interest_over_time(pytrends, retries=5, sleep_time=60):
+    for attempt in range(retries):
+        try:
+            return pytrends.interest_over_time()
+        except TooManyRequestsError:
+            wait = sleep_time * (attempt + 1)
+            print(f"⚠️ Rate limited by Google. Waiting {wait}s before retrying...")
+            time.sleep(wait)
+        except Exception as e:
+            print(f"⚠️ Unexpected error: {e}")
+            time.sleep(10)
+    print("❌ Failed after multiple retries.")
+    return pd.DataFrame()
+
+
 # === GOOGLE TRENDS FETCH & PLOT ===
 def fetch_and_plot_trends(keywords, spike_threshold=40):
     print(f"📊 Fetching Google Trends data for: {', '.join(keywords)}")
@@ -44,7 +62,7 @@ def fetch_and_plot_trends(keywords, spike_threshold=40):
         gprop="",   # web search
     )
 
-    df = pytrends.interest_over_time()
+    df = safe_interest_over_time(pytrends)
     if df.empty:
         print("⚠️ No data found.")
         return None
