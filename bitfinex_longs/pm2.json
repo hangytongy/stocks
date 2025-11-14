@@ -1,9 +1,9 @@
 {
     "apps": [
       {
-        "name": "bitfinex longs",
+        "name": "bitfinex_longs",
         "script": "venv/bin/python3",
-        "cron_restart": "0 /8 * * *",
+        "cron_restart": "0 */8 * * *",
         "autorestart" : false,
         "args" : "bitfinex_longs.py"
       }
